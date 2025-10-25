@@ -3,16 +3,29 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image, ImageOps
 import matplotlib.pyplot as plt
+import os
+import gdown
 
 # -------------------------------
-# Load Trained Model
+# Streamlit App Config
 # -------------------------------
 st.set_page_config(page_title="MNIST Digit Recognition", layout="centered")
-st.title("🧠 MNIST Digit Recognition App (Student Project)")
+st.title("🧠 MNIST Digit Recognition App")
+
 st.write("Upload a handwritten **digit (0–9)** image and the model will predict it!")
 
-# Load your trained CNN model
-model_path = r"E:\MNIST_cnn_Project\mnist_cnn.h5"
+# -------------------------------
+# Load Trained Model from Google Drive
+# -------------------------------
+model_path = "mnist_cnn.h5"
+
+# Download model if it doesn't exist
+if not os.path.exists(model_path):
+    url = "https://drive.google.com/uc?export=download&id=1NF-w35UmAzC_Q8_ln5CDhXSt9NLj-y83"
+    st.info("Downloading model from Google Drive...")
+    gdown.download(url, model_path, quiet=False)
+
+# Load model
 model = load_model(model_path)
 st.success("Model loaded successfully ✅")
 
@@ -53,3 +66,4 @@ if uploaded_file is not None:
         st.error(f"⚠️ Error processing image: {e}")
 else:
     st.info("Please upload a digit image (JPG/PNG).")
+
